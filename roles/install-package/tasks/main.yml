@@ -1,0 +1,17 @@
+- name: print package-names
+   debug:
+     msg: "{{ package_names }}"
+
+ - name: set variables
+   set_fact:
+     package_list: "{{ package_names.split(',') | list }}"
+
+ - name: yum-clean-metadata
+   command: yum clean metadata
+
+ - name: yum-clean-all
+   command: yum clean all
+
+ - name: install packages
+   yum: name="{{ item | trim }}" state=present
+   with_items: "{{ package_list }}"
